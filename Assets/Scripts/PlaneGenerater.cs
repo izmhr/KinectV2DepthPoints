@@ -6,10 +6,26 @@ using UnityEngine;
 
 public class PlaneGenerater : MonoBehaviour
 {
-	// Use this for initialization
+	[SerializeField]
+	private int w = 512;
+	[SerializeField]
+	private int h = 424;
+	[SerializeField]
+	private float pitch = 0.01f;
+
+	public enum UVShift
+	{
+		NORMAL,
+		SHIFT
+	}
+	[SerializeField]
+	private UVShift uvShift = UVShift.SHIFT;
+
+
+	// 起動時にインスペクターの設定に従ってメッシュを生成する
 	void Awake()
 	{
-		GetComponent<MeshFilter>().mesh = MeshGenerate4(512, 424, 0.01f);
+		GetComponent<MeshFilter>().mesh = MeshGenerate();
 	}
 
 	// Update is called once per frame
@@ -18,7 +34,7 @@ public class PlaneGenerater : MonoBehaviour
 
 	}
 
-	private Mesh MeshGenerate()
+	private Mesh MeshGenerateTest()
 	{
 		Mesh mesh = new Mesh();
 		Rect rect = new Rect(0, 0, 2, 2);
@@ -48,7 +64,7 @@ public class PlaneGenerater : MonoBehaviour
 		return mesh;
 	}
 
-	Mesh MeshGenerate2()
+	Mesh MeshGenerateTest2()
 	{
 		Mesh mesh = new Mesh();
 		Rect rect = new Rect(0, 0, 2, 2);
@@ -91,7 +107,7 @@ public class PlaneGenerater : MonoBehaviour
 		return mesh;
 	}
 
-	Mesh MeshGenerate3(int w, int h)
+	Mesh MeshGenerateTest3(int w, int h)
 	{
 		Mesh mesh = new Mesh();
 
@@ -100,54 +116,7 @@ public class PlaneGenerater : MonoBehaviour
 		{
 			for (var x = 0; x < (w + 1); x++)
 			{
-				vertices[y * (w+1) + x] = new Vector3((float)x, (float)y, 0f);
-				//vertices[i * 3 + j].x = j;
-				//mesh.vertices[i * 3 + j].y = i;
-			}
-		}
-		mesh.vertices = vertices;
-
-		Vector2[] uv = new Vector2[(w + 1) * (h + 1)];
-		for (var y = 0; y < (h + 1); y++)
-		{
-			for (var x = 0; x < (w + 1); x++)
-			{
-				uv[y * (w+1) + x] = new Vector2((float)x / (float)w, (float)y / (float)h);
-			}
-		}
-		mesh.uv = uv;
-
-		int[] triangles = new int[w * h * 2 * 3];
-		for (var y = 0; y < h; y++)
-		{
-			for (var x = 0; x < w; x++)
-			{
-				triangles[(y * w + x) * 2 * 3 + 0] = (y * (w + 1) + x);
-				triangles[(y * w + x) * 2 * 3 + 1] = (y * (w + 1) + x + 1);
-				triangles[(y * w + x) * 2 * 3 + 2] = ((y + 1) * (w + 1) + x + 1);
-				triangles[(y * w + x) * 2 * 3 + 3] = (y * (w + 1) + x);
-				triangles[(y * w + x) * 2 * 3 + 4] = ((y + 1) * (w + 1) + x + 1);
-				triangles[(y * w + x) * 2 * 3 + 5] = ((y + 1) * (w + 1) + x);
-			}
-		}
-		mesh.triangles = triangles;
-
-		mesh.RecalculateNormals();
-		mesh.RecalculateBounds();
-		return mesh;
-	}
-
-	Mesh MeshGenerate4(int w, int h, float pitch)
-	{
-		Mesh mesh = new Mesh();
-		mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
-
-		Vector3[] vertices = new Vector3[(w + 1) * (h + 1)];
-		for (var y = 0; y < (h + 1); y++)
-		{
-			for (var x = 0; x < (w + 1); x++)
-			{
-				vertices[y * (w + 1) + x] = new Vector3((float)x * pitch, (float)y * pitch, 0f);
+				vertices[y * (w + 1) + x] = new Vector3((float)x, (float)y, 0f);
 				//vertices[i * 3 + j].x = j;
 				//mesh.vertices[i * 3 + j].y = i;
 			}
@@ -182,6 +151,110 @@ public class PlaneGenerater : MonoBehaviour
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
 		return mesh;
+	}
+
+	// w と h はメッシュの分割数 (w=2 h=2 なら、 2x2で4マス、とか)
+	Mesh MeshGenerateNormal(int w, int h, float pitch)
+	{
+		Mesh mesh = new Mesh();
+		mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
+		Vector3[] vertices = new Vector3[(w + 1) * (h + 1)];
+		for (var y = 0; y < (h + 1); y++)
+		{
+			for (var x = 0; x < (w + 1); x++)
+			{
+				vertices[y * (w + 1) + x] = new Vector3((float)x * pitch, (float)y * pitch, 0f);
+			}
+		}
+		mesh.vertices = vertices;
+
+		Vector2[] uv = new Vector2[(w + 1) * (h + 1)];
+		for (var y = 0; y < (h + 1); y++)
+		{
+			for (var x = 0; x < (w + 1); x++)
+			{
+				uv[y * (w + 1) + x] = new Vector2((float)x / (float)w, (float)y / (float)h);
+			}
+		}
+		mesh.uv = uv;
+
+		int[] triangles = new int[w * h * 2 * 3];
+		for (var y = 0; y < h; y++)
+		{
+			for (var x = 0; x < w; x++)
+			{
+				triangles[(y * w + x) * 2 * 3 + 0] = (y * (w + 1) + x);
+				triangles[(y * w + x) * 2 * 3 + 1] = (y * (w + 1) + x + 1);
+				triangles[(y * w + x) * 2 * 3 + 2] = ((y + 1) * (w + 1) + x + 1);
+				triangles[(y * w + x) * 2 * 3 + 3] = (y * (w + 1) + x);
+				triangles[(y * w + x) * 2 * 3 + 4] = ((y + 1) * (w + 1) + x + 1);
+				triangles[(y * w + x) * 2 * 3 + 5] = ((y + 1) * (w + 1) + x);
+			}
+		}
+		mesh.triangles = triangles;
+
+		mesh.RecalculateNormals();
+		mesh.RecalculateBounds();
+		return mesh;
+	}
+
+	// w と h は頂点数。 w=2 h=2 なら、 1マス。
+	Mesh MeshGenerateShift(int w, int h, float pitch)
+	{
+		Mesh mesh = new Mesh();
+		mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+
+		Vector3[] vertices = new Vector3[w * h];
+		for (var y = 0; y < h; y++)
+		{
+			for (var x = 0; x < w; x++)
+			{
+				vertices[y * w + x] = new Vector3((float)x * pitch, (float)y * pitch, 0f);
+			}
+		}
+		mesh.vertices = vertices;
+
+		Vector2[] uv = new Vector2[w * h];
+		for (var y = 0; y < h; y++)
+		{
+			for (var x = 0; x < w; x++)
+			{
+				uv[y * w + x] = new Vector2(((float)x + 0.5f) / (float)w, ((float)y + 0.5f) / (float)h);
+			}
+		}
+		mesh.uv = uv;
+
+		int[] triangles = new int[(w - 1) * (h - 1) * 2 * 3];
+		for (var y = 0; y < h - 1; y++)
+		{
+			for (var x = 0; x < w - 1; x++)
+			{
+				triangles[(y * (w - 1) + x) * 2 * 3 + 0] = (y * w + x);
+				triangles[(y * (w - 1) + x) * 2 * 3 + 1] = (y * w + x + 1);
+				triangles[(y * (w - 1) + x) * 2 * 3 + 2] = ((y + 1) * w + x + 1);
+				triangles[(y * (w - 1) + x) * 2 * 3 + 3] = (y * w + x);
+				triangles[(y * (w - 1) + x) * 2 * 3 + 4] = ((y + 1) * w + x + 1);
+				triangles[(y * (w - 1) + x) * 2 * 3 + 5] = ((y + 1) * w + x);
+			}
+		}
+		mesh.triangles = triangles;
+
+		mesh.RecalculateNormals();
+		mesh.RecalculateBounds();
+		return mesh;
+	}
+
+	Mesh MeshGenerate()
+	{
+		if (uvShift == UVShift.NORMAL)
+		{
+			return MeshGenerateNormal(w, h, pitch);
+		}
+		else
+		{
+			return MeshGenerateShift(w, h, pitch);
+		}
 	}
 }
 

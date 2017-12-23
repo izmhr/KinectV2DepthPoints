@@ -6,7 +6,7 @@ Unity 2017.3 から、Mesh が 32bit index buffer をサポートしました。
 
 ### できること
 
-- Kinect V2 の Depth 画像を、点群で表示します
+- Kinect v2 のデプス画像 (512x424 pixels, 8000階調[16bit]) を、間引くことなくポイントクラウド風に表示する
 
 ### できないこと
 
@@ -23,7 +23,7 @@ Unity 2017.3 から、Mesh が 32bit index buffer をサポートしました。
 ### 環境
 
 - Windows 10 x64
-- Unity 2017.3b10 (2017/12/1現在)
+- Unity 2017.3.0f3 (2017/12/23現在)
 - Visual Studio Community 2017 (これは依存してないと思う)
 - KinectSDK-v2.0_1409
 
@@ -39,3 +39,7 @@ Unity 2017.3 から、Mesh が 32bit index buffer をサポートしました。
 - Kinect for Windows SDK 2.0 Unity Pro Add-in の .unitypackage を展開する
 - Main.unity シーンを開く
 - 実行する
+
+### 調整
+
+- `KinectDepthBasic` マテリアル (`KinectDepthBasic` シェーダ) の `Displacement` の値を調整することで、デプスの奥方向への広げ方を調整出来ます。
