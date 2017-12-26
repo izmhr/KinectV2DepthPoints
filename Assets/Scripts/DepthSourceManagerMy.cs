@@ -29,7 +29,8 @@ public class DepthSourceManagerMy : MonoBehaviour
 			_Data = new ushort[frameDesc.LengthInPixels];
 			_RawData = new byte[frameDesc.LengthInPixels * 2];
 			// 16bit のテクスチャ。適切な単色のフォーマットがないので、RGBA4444で16bit分確保する
-			_Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.RGBA4444, false);
+			//_Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.RGBA4444, false);
+			_Texture = new Texture2D(frameDesc.Width, frameDesc.Height, TextureFormat.ARGB4444, false);
 
 			if (!_Sensor.IsOpen)
 			{
