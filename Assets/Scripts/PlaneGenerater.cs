@@ -67,7 +67,6 @@ public class PlaneGenerater : MonoBehaviour
 	Mesh MeshGenerateTest2()
 	{
 		Mesh mesh = new Mesh();
-		Rect rect = new Rect(0, 0, 2, 2);
 
 		Vector3[] vertices = new Vector3[3 * 3];
 		for (var i = 0; i < 3; i++)
@@ -164,7 +163,7 @@ public class PlaneGenerater : MonoBehaviour
 		{
 			for (var x = 0; x < (w + 1); x++)
 			{
-				vertices[y * (w + 1) + x] = new Vector3((float)x * pitch, (float)y * pitch, 0f);
+				vertices[y * (w + 1) + x] = new Vector3((float)(x - w / 2) * pitch, (float)(y - h / 2) * pitch, 0f);
 			}
 		}
 		mesh.vertices = vertices;
@@ -210,7 +209,7 @@ public class PlaneGenerater : MonoBehaviour
 		{
 			for (var x = 0; x < w; x++)
 			{
-				vertices[y * w + x] = new Vector3((float)x * pitch, (float)y * pitch, 0f);
+				vertices[y * w + x] = new Vector3((float)(x - w / 2) * pitch, (float)(y - h / 2) * pitch, 0f);
 			}
 		}
 		mesh.vertices = vertices;
@@ -257,4 +256,3 @@ public class PlaneGenerater : MonoBehaviour
 		}
 	}
 }
-

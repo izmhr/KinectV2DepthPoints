@@ -3,7 +3,7 @@
 	Properties
 	{
 		_MainTex("Texture", 2D) = "white" {}
-		_Displacement("Displacement", Range(0, 1)) = 1
+		_Displacement("Displacement", Range(0, 0.1)) = 0.03
 		_Color("Particle Color", Color) = (1,1,1,1)
 	}
 	SubShader
@@ -45,13 +45,18 @@
 
 			v2f vert(appdata v)
 			{
-				// ピクセル毎の色 = デプスに基づいて、z方向に頂点を移動させる
+				// ピクセル毎の色情報に乗せてきたデプス情報を復元する
 				float4 col = tex2Dlod(_MainTex, float4(v.uv, 0, 0));
 				//TextureFormat.RGBA4444の場合
 				//float d = col.w + col.z * 16 + col.y * 16 * 16 + col.x * 16 * 16 * 16;
 				//TextureFormat.ARGB4444の場合
-				float d = col.z + col.y * 16 + col.x * 16 * 16 + col.w * 16 * 16 * 16;
-				v.vertex.z = d * _Displacement;
+				float d = (col.z + col.y * 16 + col.x * 16 * 16 + col.w * 16 * 16 * 16) * _Displacement;
+
+				// デプスカメラ座標系から空間に展開する。
+				// C#の層でやるならCoordinateMapper.MapDepthFrameToCameraSpace を用いる
+				v.vertex.x = v.vertex.x * d / 3.656;
+				v.vertex.y = v.vertex.y * d / 3.656;
+				v.vertex.z = d;
 				
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
