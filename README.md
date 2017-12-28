@@ -2,6 +2,10 @@
 
 Unity で Kinect V2 の Depth 画像を、点群として見るソフトです
 
+![image](http://cdn-ak.f.st-hatena.com/images/fotolife/A/AMANE/20171227/20171227222450_original.png)
+
+![youtube](https://www.youtube.com/watch?v=19P8f213UU8)
+
 Unity 2017.3 から、Mesh が 32bit index buffer をサポートしました。 [(リリースノート)](https://unity3d.com/jp/unity/beta/unity2017.3.0b10) これにより、65536頂点以上の頂点を持つ Mesh オブジェクトを扱えるようになっています。
 
 ### できること
@@ -10,7 +14,8 @@ Unity 2017.3 から、Mesh が 32bit index buffer をサポートしました。
 
 ### できないこと
 
-- CameraSpace に展開していません(Depth の画像に馬鹿正直に奥行きをつけています)
+- KinectSDK をつかった CameraSpace への展開をしていません。「それっぽい」展開を独自実装しています
+- カラー画像とのマッピングが出来る設計になっていません。
 
 ### リファレンス
 
