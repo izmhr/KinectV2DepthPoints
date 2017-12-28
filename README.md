@@ -4,7 +4,7 @@ Unity で Kinect V2 の Depth 画像を、点群として見るソフトです
 
 ![image](http://cdn-ak.f.st-hatena.com/images/fotolife/A/AMANE/20171227/20171227222450_original.png)
 
-![youtube](https://www.youtube.com/watch?v=19P8f213UU8)
+* [Kinect v2 Point Cloud on Unity 2017.3 - YouTube](https://www.youtube.com/watch?v=19P8f213UU8)
 
 Unity 2017.3 から、Mesh が 32bit index buffer をサポートしました。 [(リリースノート)](https://unity3d.com/jp/unity/beta/unity2017.3.0b10) これにより、65536頂点以上の頂点を持つ Mesh オブジェクトを扱えるようになっています。
 
